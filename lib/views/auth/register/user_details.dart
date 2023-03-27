@@ -6,8 +6,8 @@ import '../../../shared/colors.dart';
 import '../../../shared/options.dart';
 
 class UserDetails extends StatefulWidget {
-  VoidCallback submitFunc;
-  UserDetails({super.key, required this.submitFunc});
+  final VoidCallback submitFunc;
+  const UserDetails({super.key, required this.submitFunc});
 
   @override
   State<UserDetails> createState() => _UserDetailsState();

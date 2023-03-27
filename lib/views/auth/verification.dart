@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 
-import '../../../shared/colors.dart';
+import '../../shared/colors.dart';
 
-Widget verification({required VoidCallback func}) {
+Widget verification({required VoidCallback func, required String text, required String btn}) {
   return Center(
     child: Column(
       children: [
@@ -17,13 +17,13 @@ Widget verification({required VoidCallback func}) {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Text(
-            "A verification link has been sent to the email you provided. Please click on the link to verify your email address",
+            text,
             textAlign: TextAlign.center,
             style: GoogleFonts.openSans(color: cMain, fontSize: 16),
           ),
         ),
         const SizedBox(height: 20),
-        primaryBtn(btnSize: const Size(150, 50), text: "Resend", func: func, outlined: true),
+        primaryBtn(btnSize: const Size(150, 50), text: btn, func: func, outlined: true),
         const Spacer(),
       ],
     ),

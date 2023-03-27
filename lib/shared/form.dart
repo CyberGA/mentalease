@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/shared/colors.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 import 'package:mentalease/views/auth/login/index.dart';
+import 'package:mentalease/views/auth/login/reset_password.dart';
 import 'package:mentalease/views/auth/register/index.dart';
 
 Widget form({required String page, required VoidCallback func, required BuildContext context}) => Container(
@@ -38,7 +39,11 @@ Widget form({required String page, required VoidCallback func, required BuildCon
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Forgot Password?", style: GoogleFonts.openSans(color: cMain, fontSize: 18, fontWeight: FontWeight.w500)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, ResetPassword.route);
+                      },
+                      child: Text("Forgot Password?", style: GoogleFonts.openSans(color: cMain, fontSize: 18, fontWeight: FontWeight.w500))),
                   ],
                 )
               : Container(),

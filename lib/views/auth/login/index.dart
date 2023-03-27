@@ -34,8 +34,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           splashBorderRadius: BorderRadius.circular(100),
           unselectedLabelColor: cMain.withOpacity(0.4),
           labelColor: cWhite,
-          labelStyle: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 20),
-          unselectedLabelStyle: GoogleFonts.openSans(fontSize: 20),
+          labelStyle: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 18),
+          unselectedLabelStyle: GoogleFonts.openSans(fontSize: 16),
           indicator: BoxDecoration(
             color: cMain,
             borderRadius: BorderRadius.circular(100),
@@ -47,7 +47,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             ),
             Padding(
               padding: EdgeInsets.all(10),
-              child: Text("Aid"),
+              child: Text("Psychologist"),
             ),
           ],
         ),
@@ -65,6 +65,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             context: context,
             func: () {
               debugPrint("User type ${_tabController.index}");
+              //! check if user is verified
+              //! If user is verified, go to chat,
+              //! else go to verification page
             }),
       ),
     ])));

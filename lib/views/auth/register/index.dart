@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/shared/form.dart';
+import 'package:mentalease/views/auth/login/index.dart';
 import 'package:mentalease/views/auth/register/user_details.dart';
-import 'package:mentalease/views/auth/register/verification.dart';
+import 'package:mentalease/views/auth/verification.dart';
 
 import '../../../shared/colors.dart';
 
@@ -29,12 +30,18 @@ class _RegisterState extends State<Register> {
       case 0:
         return signup();
       case 1:
-        return verification(func: () {});
-      case 2:
         return UserDetails(
           submitFunc: () {
-            debugPrint("Submitting");
+            setState(() {
+              step = 2;
+            });
           },
+        );
+      case 2:
+        return verification(
+          func: () => Navigator.pushNamedAndRemoveUntil(context, Login.route, (route) => false),
+          text: "A verification link has been sent to the email you provided. Please click on the link to verify your email address",
+          btn: "Resend",
         );
       default:
         return signup();
@@ -58,7 +65,7 @@ class _RegisterState extends State<Register> {
                 context: context,
                 func: () {
                   setState(() {
-                    step = 2;
+                    step = 1;
                   });
                 }),
           ),
