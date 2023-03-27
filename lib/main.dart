@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mentalease/routes.dart';
+import 'package:mentalease/shared/colors.dart';
+import 'package:mentalease/views/onboarding/index.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MentalEase',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.light().copyWith(
+        primaryColor: cMain,
+        scaffoldBackgroundColor: cWhite,
       ),
-      home: const Scaffold(
-        body: Center(child: Text("Welcome to MentalEase")),
-      ),
+      initialRoute: Onboarding.route,
+      routes: appRoutes,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
