@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentalease/services/exceptions/auth.dart';
+import 'package:mentalease/repository/exceptions/auth.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 

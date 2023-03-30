@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:mentalease/models/role.dart';
-import 'package:mentalease/services/exceptions/auth.dart';
+import 'package:mentalease/repository/exceptions/auth.dart';
 import 'package:mentalease/views/auth/index.dart';
 import 'package:mentalease/views/auth/login/index.dart';
 import 'package:mentalease/views/auth/register/index.dart';
@@ -91,21 +91,6 @@ class AuthService extends GetxController {
       print(e);
       const err = AuthFailure();
       print(err.message);
-      return err;
-    }
-  }
-
-  Future isUserVerified() async {
-    try {
-      if (firebaseUser.value != null) {
-        return firebaseUser.value?.emailVerified ?? false;
-      }
-      return false;
-    } on FirebaseAuthException catch (e) {
-      final err = AuthFailure.code(code: e.code);
-      return err;
-    } catch (e) {
-      const err = AuthFailure();
       return err;
     }
   }

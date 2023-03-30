@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mentalease/models/role.dart';
-import 'package:mentalease/services/auth_service.dart';
+import 'package:mentalease/repository/auth_service.dart';
 
 class AuthController extends GetxController {
   static AuthController get instance => Get.find();
@@ -36,10 +36,6 @@ class AuthController extends GetxController {
     return response;
   }
 
-  Future isUserVerified() async {
-    final response = await AuthService.instance.isUserVerified();
-    return response;
-  }
 
   Future login() async {
     final response = await AuthService.instance.loginUserWithEmailAndPassword(email.text.trim(), password.text);

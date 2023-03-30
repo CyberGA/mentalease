@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentalease/services/exceptions/auth.dart';
+import 'package:mentalease/repository/exceptions/auth.dart';
 import 'package:mentalease/shared/auth_form.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';

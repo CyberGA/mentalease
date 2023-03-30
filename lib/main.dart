@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mentalease/firebase_options.dart';
 import 'package:mentalease/routes.dart';
-import 'package:mentalease/services/auth_service.dart';
+import 'package:mentalease/repository/auth_service.dart';
 import 'package:mentalease/shared/colors.dart';
 import 'package:mentalease/views/onboarding/index.dart';
 import 'package:loader_overlay/loader_overlay.dart';

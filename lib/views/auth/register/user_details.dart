@@ -7,7 +7,7 @@ import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 
-import '../../../services/exceptions/auth.dart';
+import '../../../repository/exceptions/auth.dart';
 import '../../../shared/colors.dart';
 import '../../../shared/options.dart';
 

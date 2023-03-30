@@ -8,7 +8,7 @@ import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 import 'package:mentalease/views/auth/login/index.dart';
 import 'package:mentalease/views/auth/register/user_details.dart';
 
-import '../../../services/exceptions/auth.dart';
+import '../../../repository/exceptions/auth.dart';
 import '../../../shared/colors.dart';
 
 class Register extends StatefulWidget {

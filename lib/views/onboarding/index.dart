@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mentalease/shared/colors.dart';
 import 'package:mentalease/shared/utils.dart';
-import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 
 
 class Onboarding extends StatefulWidget {
@@ -14,7 +12,6 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  final AuthController _controller = Get.put(AuthController());
 
   @override
   void initState() {
@@ -24,14 +21,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   _controller.isUserVerified().then((res) {
-    //     if (res is! AuthFailure && res != true) {
-    //       Navigator.pushReplacementNamed(context, Auth.route);
-    //     }
-    //   });\\
-    // });
-
     return Scaffold(
       backgroundColor: cMain,
       body: SafeArea(
