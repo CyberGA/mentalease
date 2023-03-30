@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "893525050425",
+    "project_id": "mentalease-2273c",
+    "storage_bucket": "mentalease-2273c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893525050425:android:70a3c9ed02cf014731b9e8",
+        "android_client_info": {
+          "package_name": "com.example.mentalease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893525050425-f4m8cep979ffnbq780onluidhqtfde1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR0NaIEtOCl6SnJzc5MlmFMn5Y11x9LgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893525050425-f4m8cep979ffnbq780onluidhqtfde1f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

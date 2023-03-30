@@ -1,9 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mentalease/firebase_options.dart';
 import 'package:mentalease/routes.dart';
+import 'package:mentalease/services/auth_service.dart';
 import 'package:mentalease/shared/colors.dart';
 import 'package:mentalease/views/onboarding/index.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((value) => Get.put(AuthService()));
   runApp(const MyApp());
 }
 
@@ -13,15 +20,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MentalEase',
-      theme: ThemeData.light().copyWith(
-        primaryColor: cMain,
-        scaffoldBackgroundColor: cWhite,
+    return GlobalLoaderOverlay(
+      useDefaultLoading: false,
+      overlayWidget: const Center(
+        child: CircularProgressIndicator(color: cMain),
       ),
-      initialRoute: Onboarding.route,
-      routes: appRoutes,
-      debugShowCheckedModeBanner: false,
+      overlayColor: cBlack.withOpacity(0.3),
+      overlayOpacity: 1,
+      child: GetMaterialApp(
+        title: 'MentalEase',
+        theme: ThemeData.light().copyWith(
+          primaryColor: cMain,
+          scaffoldBackgroundColor: cWhite,
+        ),
+        initialRoute: Onboarding.route,
+        routes: appRoutes,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

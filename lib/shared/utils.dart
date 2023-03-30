@@ -6,12 +6,13 @@ class Utils {
   static statusChange({
     Color cBar = cWhite,
     Brightness cBarIconBrightness = Brightness.dark,
+    Color? cNav
   }) {
     //? This changes the color scheme of the status
     return SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cBar,
       statusBarIconBrightness: cBarIconBrightness,
-      systemNavigationBarColor: cBar,
+      systemNavigationBarColor: cNav ?? cBar,
       systemNavigationBarIconBrightness: cBarIconBrightness,
     ));
   }

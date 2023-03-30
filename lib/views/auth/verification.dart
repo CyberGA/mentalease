@@ -4,8 +4,23 @@ import 'package:mentalease/shared/primary_btn.dart';
 
 import '../../shared/colors.dart';
 
-Widget verification({required VoidCallback func, required String text, required String btn}) {
-  return Center(
+class Verification extends StatefulWidget {
+  final VoidCallback func;
+  final String text;
+  final String btn;
+  final VoidCallback done;
+  const Verification({super.key, required this.func, required this.text, required this.btn, required this.done});
+
+  @override
+  State<Verification> createState() => _VerificationState();
+}
+
+class _VerificationState extends State<Verification> {
+  bool loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
     child: Column(
       children: [
         const Spacer(),
@@ -17,15 +32,53 @@ Widget verification({required VoidCallback func, required String text, required 
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Text(
-            text,
+              widget.text,
             textAlign: TextAlign.center,
             style: GoogleFonts.openSans(color: cMain, fontSize: 16),
           ),
         ),
         const SizedBox(height: 20),
-        primaryBtn(btnSize: const Size(150, 50), text: btn, func: func, outlined: true),
+          loading
+              ? const Center(child: CircularProgressIndicator(color: cMain))
+              : primaryBtn(
+                  btnSize: const Size(150, 50),
+                  text: widget.btn,
+                  func: () {
+                    setState(() {
+                      loading = true;
+                    });
+                    Future.delayed(const Duration(seconds: 2), () {
+                      widget.func();
+                    }).then((value) {
+                      setState(() {
+                        loading = false;
+                      });
+                    });
+                  },
+                  outlined: true),
+          const SizedBox(height: 10),
+          loading
+              ? Container()
+              : primaryBtn(
+                  btnSize: const Size(150, 50),
+                  text: "Done",
+                  func: () {
+                    setState(() {
+                      loading = true;
+                    });
+                    Future.delayed(const Duration(seconds: 2), () {
+                      widget.done();
+                    }).then((value) {
+                      setState(() {
+                        loading = false;
+                      });
+                    });
+                  },
+                  outlined: false),
         const Spacer(),
       ],
     ),
   );
+  }
 }
+

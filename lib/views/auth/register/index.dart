@@ -1,22 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentalease/shared/form.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:mentalease/shared/auth_form.dart';
+import 'package:mentalease/shared/popup.dart';
+import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 import 'package:mentalease/views/auth/login/index.dart';
 import 'package:mentalease/views/auth/register/user_details.dart';
-import 'package:mentalease/views/auth/verification.dart';
 
+import '../../../services/exceptions/auth.dart';
 import '../../../shared/colors.dart';
 
 class Register extends StatefulWidget {
   static const String route = "/auth/register";
-  const Register({super.key});
+  final int initStep;
+  const Register({super.key, this.initStep = 0});
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-  int step = 0;
+  final controller = Get.put(AuthController());
+  final _formKey = GlobalKey<FormState>();
+  late int step;
+
+  @override
+  void initState() {
+    super.initState();
+    step = widget.initStep;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +46,20 @@ class _RegisterState extends State<Register> {
   Widget body() {
     switch (step) {
       case 0:
-        return signup();
+        return signup(context);
       case 1:
         return UserDetails(
+          controller: controller,
           submitFunc: () {
-            setState(() {
-              step = 2;
-            });
+            Get.offAll(() => const Login(initStep: 1));
           },
         );
-      case 2:
-        return verification(
-          func: () => Navigator.pushNamedAndRemoveUntil(context, Login.route, (route) => false),
-          text: "A verification link has been sent to the email you provided. Please click on the link to verify your email address",
-          btn: "Resend",
-        );
       default:
-        return signup();
+        return signup(context);
     }
   }
 
-  Widget signup() => Column(
+  Widget signup(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 80),
@@ -60,14 +71,28 @@ class _RegisterState extends State<Register> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: form(
-                page: "Sign up",
-                context: context,
-                func: () {
-                  setState(() {
-                    step = 1;
-                  });
-                }),
+            child: Form(
+              key: _formKey,
+              child: AuthForm(
+                  controller: controller,
+                  page: "Sign up",
+                  context: context,
+                  func: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.loaderOverlay.show();
+                      try {
+                        controller.registerUser().then((res) {
+                          if (res is AuthFailure) {
+                            popup(text: res.message, title: "Error", type: Notify.error);
+                          }
+                        });
+                      } catch (err) {
+                        popup(text: "Something went wrong", title: "Error", type: Notify.error);
+                      }
+                      context.loaderOverlay.hide();
+                    }
+                  }),
+            ),
           ),
         ],
       );
