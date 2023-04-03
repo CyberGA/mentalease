@@ -5,7 +5,7 @@ import 'package:mentalease/repository/exceptions/auth.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 
-import '../../../shared/colors.dart';
+import '../../../colors.dart';
 import '../controllers/auth_controller.dart';
 
 class ResetPassword extends StatefulWidget {

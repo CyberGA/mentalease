@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentalease/shared/colors.dart';
+import 'package:mentalease/colors.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 import 'package:mentalease/views/auth/login/index.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'colors.dart';
+import '../colors.dart';
 
 Widget options({required String text, required TextEditingController controller, required BuildContext context, required VoidCallback func}) => InkWell(
       onTap: () {

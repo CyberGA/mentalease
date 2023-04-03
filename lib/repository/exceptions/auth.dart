@@ -1,7 +1,7 @@
 class AuthFailure {
   final String message;
 
-  const AuthFailure([this.message = "An error occurred."]);
+  const AuthFailure([this.message = "An error occurred. Please try again"]);
 
   factory AuthFailure.code({required String code, String? message}) {
     switch (code) {
@@ -19,6 +19,10 @@ class AuthFailure {
         return AuthFailure(message ?? 'No account exists for this email');
       case 'user-disabled':
         return const AuthFailure('This user has been disabled. Please contact support for help');
+      case 'username-already-exits':
+        return const AuthFailure('This username has already been taken');
+      case 'incorrect-user-role':
+        return const AuthFailure('Email or password incorrect. Ensure you choose the correct account type');
       default:
         return const AuthFailure();
     }

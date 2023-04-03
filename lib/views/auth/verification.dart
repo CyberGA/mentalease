@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 
-import '../../shared/colors.dart';
+import '../../colors.dart';
+import 'controllers/auth_controller.dart';
 
 class Verification extends StatefulWidget {
   final VoidCallback func;
@@ -20,65 +22,83 @@ class _VerificationState extends State<Verification> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-    child: Column(
-      children: [
-        const Spacer(),
-        Icon(
-          Icons.mail,
-          color: cMain.withOpacity(0.6),
-          size: 80,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-          child: Text(
-              widget.text,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.openSans(color: cMain, fontSize: 16),
-          ),
-        ),
-        const SizedBox(height: 20),
-          loading
-              ? const Center(child: CircularProgressIndicator(color: cMain))
-              : primaryBtn(
-                  btnSize: const Size(150, 50),
-                  text: widget.btn,
-                  func: () {
-                    setState(() {
-                      loading = true;
-                    });
-                    Future.delayed(const Duration(seconds: 2), () {
-                      widget.func();
-                    }).then((value) {
+    final controller = Get.put(AuthController());
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: cWhite,
+        elevation: 0,
+        actions: [
+          IconButton(
+              onPressed: () {
+                controller.logout().then((value) {
+                  controller.fullName.text = "";
+                  controller.username.text = "";
+                  controller.role.text = "";
+                });
+              },
+              icon: const Icon(Icons.close, color: cBlack, size: 26))
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Spacer(),
+            Icon(
+              Icons.mail,
+              color: cMain.withOpacity(0.6),
+              size: 80,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              child: Text(
+                widget.text,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.openSans(color: cMain, fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 20),
+            loading
+                ? const Center(child: CircularProgressIndicator(color: cMain))
+                : primaryBtn(
+                    btnSize: const Size(150, 50),
+                    text: widget.btn,
+                    func: () {
                       setState(() {
-                        loading = false;
+                        loading = true;
                       });
-                    });
-                  },
-                  outlined: true),
-          const SizedBox(height: 10),
-          loading
-              ? Container()
-              : primaryBtn(
-                  btnSize: const Size(150, 50),
-                  text: "Done",
-                  func: () {
-                    setState(() {
-                      loading = true;
-                    });
-                    Future.delayed(const Duration(seconds: 2), () {
-                      widget.done();
-                    }).then((value) {
+                      Future.delayed(const Duration(seconds: 2), () {
+                        widget.func();
+                      }).then((value) {
+                        setState(() {
+                          loading = false;
+                        });
+                      });
+                    },
+                    outlined: true),
+            const SizedBox(height: 10),
+            loading
+                ? Container()
+                : primaryBtn(
+                    btnSize: const Size(150, 50),
+                    text: "Done",
+                    func: () {
                       setState(() {
-                        loading = false;
+                        loading = true;
                       });
-                    });
-                  },
-                  outlined: false),
-        const Spacer(),
-      ],
-    ),
-  );
+                      Future.delayed(const Duration(seconds: 2), () {
+                        widget.done();
+                      }).then((value) {
+                        setState(() {
+                          loading = false;
+                        });
+                      });
+                    },
+                    outlined: false),
+            const Spacer(),
+          ],
+        ),
+      ),
+    );
   }
 }
-

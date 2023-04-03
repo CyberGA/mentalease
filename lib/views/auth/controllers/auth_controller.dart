@@ -20,14 +20,20 @@ class AuthController extends GetxController {
     return response;
   }
 
-  Future completeProfile(String path, File? file) async {
+  Future completeProfile(String certPath, File? certFile, String picsPath, File pics, ) async {
     final user = role.text == "User" ? Role.user : Role.therapist;
-    final response = await AuthService.instance.completeProfile(username.text.trim(), path, file, user, fullName.text.trim());
+    final response = await AuthService.instance.completeProfile(username.text.trim(), email.text.trim(), certPath, certFile, picsPath, pics, user, fullName.text.trim());
     return response;
   }
 
   Future verifyEmail() async {
     final response = await AuthService.instance.sendVerification();
+    return response;
+  }
+
+  Future updateVerificationStatus() async {
+    final userRole = role.text == "User" ? Role.user : Role.therapist;
+    final response = await AuthService.instance.updateVerificationStatus(userRole);
     return response;
   }
 
@@ -37,8 +43,8 @@ class AuthController extends GetxController {
   }
 
 
-  Future login() async {
-    final response = await AuthService.instance.loginUserWithEmailAndPassword(email.text.trim(), password.text);
+  Future login(Role role) async {
+    final response = await AuthService.instance.loginUserWithEmailAndPassword(email.text.trim(), password.text, role);
     return response;
   }
 

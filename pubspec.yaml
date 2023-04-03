@@ -45,6 +45,12 @@ dependencies:
   file_picker: ^5.2.6
   firebase_storage: ^11.0.16
   cloud_firestore: ^4.4.5
+  swipe_to: ^1.0.2
+  loader_skeleton: ^0.0.4
+  crypto: ^3.0.2
+  shared_preferences: ^2.1.0
+  intl: ^0.17.0
+  emoji_picker_flutter: ^1.5.2
 
 dev_dependencies:
   flutter_test:

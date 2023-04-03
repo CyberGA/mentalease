@@ -8,7 +8,7 @@ import 'package:mentalease/shared/primary_btn.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 
 import '../../../repository/exceptions/auth.dart';
-import '../../../shared/colors.dart';
+import '../../../colors.dart';
 import '../../../shared/options.dart';
 
 class UserDetails extends StatefulWidget {
@@ -24,6 +24,7 @@ class _UserDetailsState extends State<UserDetails> {
   int userType = 0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   PlatformFile? pickedFile;
+  PlatformFile? photo;
   bool loading = false;
 
   _selectFile() async {
@@ -37,6 +38,17 @@ class _UserDetailsState extends State<UserDetails> {
     }
   }
 
+  _uploadPhoto() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'png', 'jpeg']);
+    if (result != null) {
+      setState(() {
+        photo = result.files.first;
+      });
+    } else {
+      // User canceled the picker
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -44,12 +56,59 @@ class _UserDetailsState extends State<UserDetails> {
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
-          const SizedBox(height: 80),
+          const SizedBox(height: 60),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("User Details", style: GoogleFonts.openSans(color: cMain, fontSize: 26, fontWeight: FontWeight.bold)),
             ],
+          ),
+          const SizedBox(height: 20),
+          //* upload photo
+          GestureDetector(
+            onTap: _uploadPhoto,
+            child: Center(
+              child: Stack(
+                children: [
+                  ClipOval(
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      color: cMain.withOpacity(0.1),
+                      child: photo != null
+                          ? ClipOval(
+                              child: Image.file(
+                                File(photo!.path!),
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.person,
+                              color: cMain,
+                              size: 50,
+                            ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 14,
+                    right: 14,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: cMain,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: cWhite,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 60),
           TextFormField(
@@ -152,7 +211,7 @@ class _UserDetailsState extends State<UserDetails> {
               }
               return null;
             },
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
               filled: true,
@@ -192,25 +251,35 @@ class _UserDetailsState extends State<UserDetails> {
                   btnSize: const Size(200, 50),
                   text: "Submit",
                   func: () {
+                    if (photo == null) {
+                      popup(text: "Upload a profile picture", title: "Error", type: Notify.error);
+                      return;
+                    }
                     if (userType == 1 && pickedFile == null) {
                       popup(text: "Please upload a certification", title: "Error", type: Notify.error);
                       return;
                     }
                     if (_formKey.currentState!.validate()) {
-                      String path = "";
-                      File? file;
+                      String certPath = "";
+                      File? certFile;
+
+                      String picsPath = "";
+                      File pics;
 
                       if (widget.controller.role.text.trim() == "Therapist") {
-                        path = 'certifications/${widget.controller.username.text.trim()}/${pickedFile!.name}';
-                        file = File(pickedFile!.path!);
+                        certPath = 'users/${widget.controller.username.text.trim()}/cert${pickedFile!.name}';
+                        certFile = File(pickedFile!.path!);
                       }
+
+                      picsPath = 'users/${widget.controller.username.text.trim()}/photo${photo!.name}';
+                      pics = File(photo!.path!);
 
                       setState(() {
                         loading = true;
                       });
                       Future.delayed(const Duration(seconds: 2), () {
                         try {
-                          widget.controller.completeProfile(path, file).then((res) {
+                          widget.controller.completeProfile(certPath, certFile, picsPath, pics).then((res) {
                             if (res is AuthFailure) {
                               popup(text: res.message, title: "Error", type: Notify.error);
                             } else {

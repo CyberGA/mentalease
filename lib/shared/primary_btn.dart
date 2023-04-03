@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentalease/shared/colors.dart';
+import 'package:mentalease/colors.dart';
 
 Widget primaryBtn({required Size btnSize, required String text, required Function func, required bool outlined, double radius = 100}) {
   return Row(

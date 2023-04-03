@@ -9,7 +9,7 @@ import 'package:mentalease/views/auth/login/index.dart';
 import 'package:mentalease/views/auth/register/user_details.dart';
 
 import '../../../repository/exceptions/auth.dart';
-import '../../../shared/colors.dart';
+import '../../../colors.dart';
 
 class Register extends StatefulWidget {
   static const String route = "/auth/register";

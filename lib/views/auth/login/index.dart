@@ -8,7 +8,10 @@ import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 import 'package:mentalease/views/auth/verification.dart';
 
-import '../../../shared/colors.dart';
+import '../../../colors.dart';
+import '../../../models/role.dart';
+import '../../../module/localDB.dart';
+import '../../../shared/utils.dart';
 
 class Login extends StatefulWidget {
   static const String route = "/auth/login";
@@ -20,6 +23,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> with TickerProviderStateMixin {
+  late TabController _tabController;
   late int step;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final controller = Get.put(AuthController());
@@ -27,7 +31,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    Utils.statusChange(cBar: cWhite, cBarIconBrightness: Brightness.dark, cNav: cWhite);
     step = widget.initStep;
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -44,9 +50,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         return _login();
       case 1:
         return Verification(
-          done: () {
+          done: () async {
+            await LocalDB.saveUserRole(_tabController.index);
+            
             FirebaseAuth.instance.currentUser!.reload().then((value) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
+                controller.updateVerificationStatus().then((res) {
+                  if(res is AuthFailure) {
+                    popup(text: res.message, title: "Error", type: Notify.error);
+                  }
+                });
+                
               } else {
                 popup(text: "Email has not verified", title: "Error", type: Notify.error);
               }
@@ -62,7 +76,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               popup(text: "Something went wrong", title: "Error", type: Notify.error);
             }
           },
-          text: "A verification link has been sent to the email you provided. Please click on the link to verify your email address",
+          text: "A verification link has been sent to the ${controller.email.text.trim()}. Please click on the link to verify your email address",
           btn: "Resend",
         );
       default:
@@ -71,7 +85,33 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   Widget _login() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(height: 80),
+        const SizedBox(height: 40),
+        Container(
+          margin: const EdgeInsets.all(24),
+          child: TabBar(
+            controller: _tabController,
+            splashBorderRadius: BorderRadius.circular(100),
+            unselectedLabelColor: cMain.withOpacity(0.4),
+            labelColor: cWhite,
+            labelStyle: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 20),
+            unselectedLabelStyle: GoogleFonts.openSans(fontSize: 20),
+            indicator: BoxDecoration(
+              color: cMain,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            tabs: const [
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text("User"),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text("Therapist"),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -85,16 +125,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 controller: controller,
                 page: "Login",
                 context: context,
-                func: () {
+                func: () async {
                   //! check if user is verified
                   //! If user is verified, go to chat,
                   //! else go to verification page
+                  await LocalDB.saveUserRole(_tabController.index);
+
                   if (_formKey.currentState!.validate()) {
                     try {
-                      controller.login().then((res) {
+                      Role role = _tabController.index == 0 ? Role.user : Role.therapist;
+                      controller.login(role).then((res) {
                         if (res is AuthFailure) {
                           popup(text: res.message, title: "Error", type: Notify.error);
-                          // errorPopup(text: res.message, context: context);
                         }
                       });
                     } catch (err) {

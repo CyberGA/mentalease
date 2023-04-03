@@ -2,15 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mentalease/firebase_options.dart';
+import 'package:mentalease/repository/chat_service.dart';
 import 'package:mentalease/routes.dart';
 import 'package:mentalease/repository/auth_service.dart';
-import 'package:mentalease/shared/colors.dart';
+import 'package:mentalease/colors.dart';
 import 'package:mentalease/views/onboarding/index.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-void main() {
+import 'module/localDB.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((value) => Get.put(AuthService()));
+  await LocalDB.init();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((value) => Get.put(AuthService())).then((value) => Get.put(ChatService()));
   runApp(const MyApp());
 }
 
