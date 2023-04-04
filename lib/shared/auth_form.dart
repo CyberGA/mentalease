@@ -21,7 +21,6 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   bool isPwdVisible = true;
-  bool loading = false;
 
   @override
   void setState(VoidCallback fn) {
@@ -136,24 +135,13 @@ class _AuthFormState extends State<AuthForm> {
             ],
           ),
           const SizedBox(height: 60),
-          loading
-              ? const Center(child: CircularProgressIndicator(color: cMain))
-              : primaryBtn(
-                  btnSize: const Size(150, 50),
-                  text: widget.page,
-                  func: () {
-                    setState(() {
-                      loading = true;
-                    });
-                    Future.delayed(const Duration(seconds: 2), () {
-                      widget.func();
-                    }).then((value) {
-                      setState(() {
-                        loading = false;
-                      });
-                    });
-                  },
-                  outlined: false)
+          primaryBtn(
+              btnSize: const Size(150, 50),
+              text: widget.page,
+              func: () {
+                widget.func();
+              },
+              outlined: false)
         ],
       ),
     );

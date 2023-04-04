@@ -78,18 +78,20 @@ class _RegisterState extends State<Register> {
                   page: "Sign up",
                   context: context,
                   func: () {
+                    context.loaderOverlay.show();
                     if (_formKey.currentState!.validate()) {
-                      context.loaderOverlay.show();
                       try {
                         controller.registerUser().then((res) {
                           if (res is AuthFailure) {
                             popup(text: res.message, title: "Error", type: Notify.error);
                           }
+                          context.loaderOverlay.hide();
                         });
                       } catch (err) {
                         popup(text: "Something went wrong", title: "Error", type: Notify.error);
+                        context.loaderOverlay.hide();
+
                       }
-                      context.loaderOverlay.hide();
                     }
                   }),
             ),

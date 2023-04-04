@@ -6,7 +6,7 @@ import 'package:mentalease/colors.dart';
 import 'package:mentalease/firebase.dart';
 import 'package:mentalease/models/chat.dart';
 import 'package:mentalease/models/message.dart';
-import 'package:mentalease/repository/exceptions/chat.dart';
+import 'package:mentalease/repository/exceptions/remote_storage.dart';
 import 'package:mentalease/shared/utils.dart';
 import 'package:mentalease/views/dashboard/chats/widgets/chat_list.dart';
 import 'package:mentalease/views/dashboard/controllers/chat.dart';
@@ -21,12 +21,26 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> {
   final chatController = Get.put(ChatController());
+  final ScrollController messageScrollController = ScrollController();
   bool showEmojis = false;
   FocusNode focusNode = FocusNode();
   final TextEditingController _messageController = TextEditingController();
   bool msgSendError = false;
   bool isResend = false;
   bool isSending = false;
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  void dispose() {
+    messageScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,25 +62,32 @@ class _MessagesState extends State<Messages> {
         ),
         titleSpacing: 0,
         title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(widget.chat.username, style: GoogleFonts.openSans(color: cWhite, fontSize: 20, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(widget.chat.isOnline ? "Online" : "Offline", style: GoogleFonts.openSans(color: cWhite, fontSize: 14)),
+              ],
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.call,
-                color: cWhite,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.calendar_month_outlined,
-                color: cWhite,
-              ))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {},
+        //       icon: const Icon(
+        //         Icons.call,
+        //         color: cWhite,
+        //       )),
+        //   IconButton(
+        //       onPressed: () {},
+        //       icon: const Icon(
+        //         Icons.calendar_month_outlined,
+        //         color: cWhite,
+        //       ))
+        // ],
       ),
       body: SafeArea(
           child: WillPopScope(
@@ -95,6 +116,7 @@ class _MessagesState extends State<Messages> {
                 bottom: 60,
                 child: ChatList(
                   chatID: widget.chat.id,
+                  scrollController: messageScrollController,
                 )),
             Align(
               alignment: Alignment.bottomCenter,
@@ -200,7 +222,7 @@ class _MessagesState extends State<Messages> {
       setState(() {
         isSending = false;
       });
-      if (res is ChatFailure) {
+      if (res is RemoteStorageFailure) {
         setState(() {
           isResend = true;
           msgSendError = true;

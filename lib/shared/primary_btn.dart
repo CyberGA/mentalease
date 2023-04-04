@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/colors.dart';
 
-Widget primaryBtn({required Size btnSize, required String text, required Function func, required bool outlined, double radius = 100}) {
+Widget primaryBtn({required Size btnSize, required String text, required Function func, required bool outlined, double radius = 100, Color bg = cMain}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: outlined ? 0 : 4,
-            backgroundColor: !outlined ? cMain : cWhite,
+            backgroundColor: !outlined ? bg : cWhite,
             side: outlined ? BorderSide(color: cMain.withOpacity(0.6), width: 2) : null,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
             minimumSize: Size(btnSize.width, 50),

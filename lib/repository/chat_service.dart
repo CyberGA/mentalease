@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mentalease/models/message.dart';
-import 'package:mentalease/repository/exceptions/chat.dart';
+import 'package:mentalease/repository/exceptions/remote_storage.dart';
 
 import '../firebase.dart';
 
@@ -15,15 +15,17 @@ class ChatService extends GetxController {
       batch.set(lastMessage(from, to), {
         "lastMessage": msg.msg,
         "lastMessageTime": msg.sentAt,
+        "isRead": true,
       });
       batch.set(lastMessage(to, from), {
         "lastMessage": msg.msg,
         "lastMessageTime": msg.sentAt,
+        "isRead": false,
       });
 
       await batch.commit();
     } catch (e) {
-      const err = ChatFailure();
+      const err = RemoteStorageFailure();
       return err;
     }
   }

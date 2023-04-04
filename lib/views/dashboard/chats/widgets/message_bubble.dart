@@ -50,7 +50,7 @@ class MessageBubble extends StatelessWidget {
                     style: const TextStyle(fontSize: 12, color: cWhite),
                   ),
                   const SizedBox(width: 2),
-                  Icon(Icons.done_all, color: data.isSeen ? msgRead : cWhite.withOpacity(0.5), size: 16),
+                  Icon(Icons.done_all, color: data.sender == currentUserID ? msgRead : cWhite.withOpacity(0.5), size: 16),
                 ],
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalease/firebase_options.dart';
 import 'package:mentalease/repository/chat_service.dart';
 import 'package:mentalease/routes.dart';
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
       useDefaultLoading: false,
-      overlayWidget: const Center(
-        child: CircularProgressIndicator(color: cMain),
+      overlayWidget: Center(
+        child: Text("Loading, please wait...", style: GoogleFonts.openSans(color: cWhite, fontSize: 16, fontWeight: FontWeight.w600)),
       ),
       overlayColor: cBlack.withOpacity(0.3),
       overlayOpacity: 1,

@@ -7,6 +7,7 @@ import 'package:mentalease/shared/auth_form.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 import 'package:mentalease/views/auth/verification.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 import '../../../colors.dart';
 import '../../../models/role.dart';
@@ -50,31 +51,32 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         return _login();
       case 1:
         return Verification(
-          done: () async {
-            await LocalDB.saveUserRole(_tabController.index);
-            
+          done: () {
+            context.loaderOverlay.show();
             FirebaseAuth.instance.currentUser!.reload().then((value) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 controller.updateVerificationStatus().then((res) {
-                  if(res is AuthFailure) {
+                  if (res is AuthFailure) {
                     popup(text: res.message, title: "Error", type: Notify.error);
                   }
+                  context.loaderOverlay.hide();
                 });
-                
               } else {
                 popup(text: "Email has not verified", title: "Error", type: Notify.error);
+                context.loaderOverlay.hide();
               }
             });
           },
           func: () {
-            try {
-              controller.verifyEmail();
-              popup(text: "Email verification link sent", title: "Email sent", type: Notify.success);
-            } on AuthFailure catch (e) {
-              popup(text: e.message, title: "Error", type: Notify.error);
-            } catch (err) {
-              popup(text: "Something went wrong", title: "Error", type: Notify.error);
-            }
+            context.loaderOverlay.show();
+            controller.verifyEmail().then((res) {
+              if (res is AuthFailure) {
+                popup(text: res.message, title: "Error", type: Notify.error);
+              } else {
+                popup(text: "Email verification link sent", title: "Email sent", type: Notify.success);
+              }
+              context.loaderOverlay.hide();
+            });
           },
           text: "A verification link has been sent to the ${controller.email.text.trim()}. Please click on the link to verify your email address",
           btn: "Resend",
@@ -125,11 +127,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 controller: controller,
                 page: "Login",
                 context: context,
-                func: () async {
+                func: () {
                   //! check if user is verified
                   //! If user is verified, go to chat,
                   //! else go to verification page
-                  await LocalDB.saveUserRole(_tabController.index);
+                  context.loaderOverlay.show();
+                  LocalDB.saveUserRole(_tabController.index);
 
                   if (_formKey.currentState!.validate()) {
                     try {
@@ -137,12 +140,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       controller.login(role).then((res) {
                         if (res is AuthFailure) {
                           popup(text: res.message, title: "Error", type: Notify.error);
+                          context.loaderOverlay.hide();
                         }
+                        context.loaderOverlay.hide();
                       });
                     } catch (err) {
                       popup(text: "Something went wrong", title: "Error", type: Notify.error);
+                      context.loaderOverlay.hide();
                     }
-                    // controller.setLoading(false);
                   }
                 }),
           ),

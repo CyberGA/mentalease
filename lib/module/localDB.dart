@@ -14,6 +14,9 @@ class LocalDB {
   static saveUserRole(int role) async {
     _store.setInt("role", role).then((value) => null);
   }
+  static removeUserRole() async {
+    _store.remove("role").then((value) => null);
+  }
 
   static Role? getUserRole() {
     int? role = _store.getInt("role");

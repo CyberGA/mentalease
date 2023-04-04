@@ -77,9 +77,14 @@ class ChatCard extends StatelessWidget {
               )),
             ),
             shape: Border(bottom: BorderSide(color: cBlack.withOpacity(0.2), width: 0.5)),
-            title: Text(
-              chat.username,
-              style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 18),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  chat.username,
+                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ],
             ),
             subtitle: data!.exists ?  Row(
               children: [

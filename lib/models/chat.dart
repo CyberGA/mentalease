@@ -6,7 +6,7 @@ class ChatModel {
   String lastMessage;
   String lastMessageTime;
   bool lastMessageRead;
-  // bool isOnline;
+  bool isOnline;
   bool isGroup;
   ChatModel({
     required this.id,
@@ -15,6 +15,7 @@ class ChatModel {
     required this.lastMessage,
     required this.lastMessageTime,
     required this.lastMessageRead,
+    required this.isOnline,
     required this.isGroup,
   });
 }

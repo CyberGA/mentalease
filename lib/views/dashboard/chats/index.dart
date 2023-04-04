@@ -71,6 +71,7 @@ class _ChatsState extends State<Chats> {
                 lastMessage: "Latest message",
                 lastMessageTime: DateTime.now().toString(),
                 isGroup: false,
+                isOnline: false,
                 lastMessageRead: true,
               );
 

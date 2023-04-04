@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mentalease/models/role.dart';
+import 'package:mentalease/module/localDB.dart';
 import 'package:mentalease/repository/auth_service.dart';
 
 class AuthController extends GetxController {
@@ -20,7 +21,12 @@ class AuthController extends GetxController {
     return response;
   }
 
-  Future completeProfile(String certPath, File? certFile, String picsPath, File pics, ) async {
+  Future completeProfile(
+    String certPath,
+    File? certFile,
+    String picsPath,
+    File pics,
+  ) async {
     final user = role.text == "User" ? Role.user : Role.therapist;
     final response = await AuthService.instance.completeProfile(username.text.trim(), email.text.trim(), certPath, certFile, picsPath, pics, user, fullName.text.trim());
     return response;
@@ -37,11 +43,16 @@ class AuthController extends GetxController {
     return response;
   }
 
+  Future updateVisibility(bool status) async {
+    final userRole = role.text == "User" ? Role.user : Role.therapist;
+    final response = await AuthService.instance.updateUserVisibility(userRole, status);
+    return response;
+  }
+
   Future resetPassword() async {
     final response = await AuthService.instance.resetPassword(email.text.trim());
     return response;
   }
-
 
   Future login(Role role) async {
     final response = await AuthService.instance.loginUserWithEmailAndPassword(email.text.trim(), password.text, role);
@@ -51,6 +62,10 @@ class AuthController extends GetxController {
   Future logout() async {
     email.text = "";
     password.text = "";
+    fullName.text = "";
+    username.text = "";
+    role.text = "";
+    LocalDB.removeUserRole();
     final response = await AuthService.instance.logout();
     return response;
   }

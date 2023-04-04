@@ -133,6 +133,7 @@ class AuthService extends GetxController {
             "certificationUrl": certification,
             "photo": photo,
             "verified": firebaseUser.value?.emailVerified,
+            "isOnline": true,
           });
         } else {
           await _user.doc(docId).set({
@@ -142,6 +143,7 @@ class AuthService extends GetxController {
             "role": "user",
             "photo": photo,
             "verified": firebaseUser.value?.emailVerified,
+            "isOnline": true,
           });
         }
       }
@@ -164,6 +166,27 @@ class AuthService extends GetxController {
         final res = await store.doc(docId).get();
         if (res.exists) {
           await store.doc(docId).update({"verified": true});
+        }
+        return true;
+      } on FirebaseAuthException catch (e) {
+        final err = AuthFailure.code(code: e.code, message: "Email or password incorrect");
+        return err;
+      } catch (e) {
+        const err = AuthFailure();
+        return err;
+      }
+    }
+  }
+
+  Future updateUserVisibility(Role role, bool status) async {
+    final user = firebaseUser.value;
+    CollectionReference store = role == Role.therapist ? _therapist : _user;
+    if (user != null) {
+      try {
+        final docId = Crypto.hash(user.email!);
+        final res = await store.doc(docId).get();
+        if (res.exists) {
+          await store.doc(docId).update({"isOnline": status});
         }
         return true;
       } on FirebaseAuthException catch (e) {

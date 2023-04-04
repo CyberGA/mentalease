@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:mentalease/repository/exceptions/auth.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/shared/primary_btn.dart';
@@ -27,8 +28,6 @@ class _ResetPasswordState extends State<ResetPassword> with TickerProviderStateM
       body: SafeArea(child: _resetForm()),
     );
   }
-
- 
 
   Widget _resetForm() => Form(
         key: _formKey,
@@ -81,17 +80,21 @@ class _ResetPasswordState extends State<ResetPassword> with TickerProviderStateM
                       text: "Submit",
                       func: () {
                         //! Send verification link to the provided email address
+                        context.loaderOverlay.show();
+
                         if (_formKey.currentState!.validate()) {
                           try {
                             controller.resetPassword().then((res) {
                               if (res is AuthFailure) {
                                 popup(text: res.message, title: "Error", type: Notify.error);
+                                context.loaderOverlay.hide();
                               } else {
                                 popup(text: "Password reset link sent to ${controller.email.text}, follow the link to reset password", title: "Email sent", type: Notify.success);
                               }
                             });
                           } catch (err) {
                             popup(text: "Something went wrong", title: "Error", type: Notify.error);
+                            context.loaderOverlay.hide();
                           }
                         }
                       },

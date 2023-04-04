@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:mentalease/shared/popup.dart';
 import 'package:mentalease/shared/primary_btn.dart';
 import 'package:mentalease/views/auth/controllers/auth_controller.dart';
 
+import '../../../module/localDB.dart';
 import '../../../repository/exceptions/auth.dart';
 import '../../../colors.dart';
 import '../../../shared/options.dart';
@@ -25,7 +27,6 @@ class _UserDetailsState extends State<UserDetails> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   PlatformFile? pickedFile;
   PlatformFile? photo;
-  bool loading = false;
 
   _selectFile() async {
     final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'png', 'jpeg', 'pdf']);
@@ -157,6 +158,7 @@ class _UserDetailsState extends State<UserDetails> {
                             controller: widget.controller.role,
                             func: () => setState((() {
                               userType = 0;
+                              LocalDB.saveUserRole(0);
                             })),
                           ),
                           options(
@@ -165,6 +167,7 @@ class _UserDetailsState extends State<UserDetails> {
                             controller: widget.controller.role,
                             func: () => setState((() {
                               userType = 1;
+                              LocalDB.saveUserRole(1);
                             })),
                           ),
                         ],
@@ -245,64 +248,56 @@ class _UserDetailsState extends State<UserDetails> {
                 )
               : Container(),
           const SizedBox(height: 60),
-          loading
-              ? const Center(child: CircularProgressIndicator(color: cMain))
-              : primaryBtn(
-                  btnSize: const Size(200, 50),
-                  text: "Submit",
-                  func: () {
-                    if (photo == null) {
-                      popup(text: "Upload a profile picture", title: "Error", type: Notify.error);
-                      return;
-                    }
-                    if (userType == 1 && pickedFile == null) {
-                      popup(text: "Please upload a certification", title: "Error", type: Notify.error);
-                      return;
-                    }
-                    if (_formKey.currentState!.validate()) {
-                      String certPath = "";
-                      File? certFile;
+          primaryBtn(
+              btnSize: const Size(200, 50),
+              text: "Submit",
+              func: () {
+                if (photo == null) {
+                  popup(text: "Upload a profile picture", title: "Error", type: Notify.error);
+                  return;
+                }
+                if (userType == 1 && pickedFile == null) {
+                  popup(text: "Please upload a certification", title: "Error", type: Notify.error);
+                  return;
+                }
+                context.loaderOverlay.show();
+                if (_formKey.currentState!.validate()) {
+                  String certPath = "";
+                  File? certFile;
 
-                      String picsPath = "";
-                      File pics;
+                  String picsPath = "";
+                  File pics;
 
-                      if (widget.controller.role.text.trim() == "Therapist") {
-                        certPath = 'users/${widget.controller.username.text.trim()}/cert${pickedFile!.name}';
-                        certFile = File(pickedFile!.path!);
+                  if (widget.controller.role.text.trim() == "Therapist") {
+                    certPath = 'users/${widget.controller.username.text.trim()}/cert${pickedFile!.name}';
+                    certFile = File(pickedFile!.path!);
+                  }
+
+                  picsPath = 'users/${widget.controller.username.text.trim()}/photo${photo!.name}';
+                  pics = File(photo!.path!);
+
+                  try {
+                    widget.controller.completeProfile(certPath, certFile, picsPath, pics).then((res) {
+                      if (res is AuthFailure) {
+                        popup(text: res.message, title: "Error", type: Notify.error);
+                      } else {
+                        popup(
+                          text: "Email verification link has been sent to ${widget.controller.email.text}, click on the link to verify your account",
+                          title: "Verification mail sent",
+                          type: Notify.success,
+                        );
+
+                        widget.submitFunc();
                       }
-
-                      picsPath = 'users/${widget.controller.username.text.trim()}/photo${photo!.name}';
-                      pics = File(photo!.path!);
-
-                      setState(() {
-                        loading = true;
-                      });
-                      Future.delayed(const Duration(seconds: 2), () {
-                        try {
-                          widget.controller.completeProfile(certPath, certFile, picsPath, pics).then((res) {
-                            if (res is AuthFailure) {
-                              popup(text: res.message, title: "Error", type: Notify.error);
-                            } else {
-                              popup(
-                                text: "Email verification link has been sent to ${widget.controller.email.text}, click on the link to verify your account",
-                                title: "Verification mail sent",
-                                type: Notify.success,
-                              );
-
-                              widget.submitFunc();
-                            }
-                          });
-                        } catch (err) {
-                          popup(text: "Something went wrong", title: "Error", type: Notify.error);
-                        }
-                      }).then((value) {
-                        setState(() {
-                          loading = false;
-                        });
-                      });
-                    }
-                  },
-                  outlined: false)
+                      context.loaderOverlay.hide();
+                    });
+                  } catch (err) {
+                    popup(text: "Something went wrong", title: "Error", type: Notify.error);
+                    context.loaderOverlay.hide();
+                  }
+                }
+              },
+              outlined: false)
         ],
       ),
     );

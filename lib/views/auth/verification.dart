@@ -18,7 +18,6 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
-  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,41 +57,19 @@ class _VerificationState extends State<Verification> {
               ),
             ),
             const SizedBox(height: 20),
-            loading
-                ? const Center(child: CircularProgressIndicator(color: cMain))
-                : primaryBtn(
+            primaryBtn(
                     btnSize: const Size(150, 50),
                     text: widget.btn,
-                    func: () {
-                      setState(() {
-                        loading = true;
-                      });
-                      Future.delayed(const Duration(seconds: 2), () {
-                        widget.func();
-                      }).then((value) {
-                        setState(() {
-                          loading = false;
-                        });
-                      });
+                func: () {
+                  widget.func();
                     },
                     outlined: true),
             const SizedBox(height: 10),
-            loading
-                ? Container()
-                : primaryBtn(
+            primaryBtn(
                     btnSize: const Size(150, 50),
                     text: "Done",
-                    func: () {
-                      setState(() {
-                        loading = true;
-                      });
-                      Future.delayed(const Duration(seconds: 2), () {
-                        widget.done();
-                      }).then((value) {
-                        setState(() {
-                          loading = false;
-                        });
-                      });
+                func: () {
+                  widget.done();
                     },
                     outlined: false),
             const Spacer(),
