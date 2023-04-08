@@ -5,7 +5,7 @@ prowess. Since not all students that can afford a fee to get a therapist, this m
 
 The app allows two form of registration ,user and therapist. Students will choose the user section, professionals choose therapist section and authentication is done accordingly. Users can chat with any therapist to find solution to their problem. 
 
-Therapists are often volunteers that have people, especially students psychological. We believe that with this simple application we can solve the psychological issues faced by many students, and this can scale to accomodate anyone.
+Therapists are often volunteers that have people, especially students psychological well being at heart. We believe that with this simple application we can solve the psychological issues faced by many students, and this can scale to accomodate anyone.
 
 
 ## Technologies used
