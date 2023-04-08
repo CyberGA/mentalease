@@ -1,4 +1,4 @@
-# MentalEase Nobile Application
+# MentalEase Mobile Application
 
 MentalEase is an application dedicated to students that suffer from psychological trauma, addiction of any sort that could hinder their academical  
 prowess. Since not all students that can afford a fee to get a therapist, this mobile application come hereby to bridge that gap, to allow all students to get access to free qualified mental health professionals to help them recover from any mental related issues.
