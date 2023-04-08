@@ -1,16 +1,8 @@
-# mentalease
+# MentalEase Nobile Application
 
-A new Flutter project.
+MentalEase is an application dedicated to students that suffer from psychological trauma, addiction of any sort that could hinder their academical  
+prowess. Since not all students that can afford a fee to get a therapist, this mobile application come hereby to bridge that gap, to allow all students to get access to free qualified mental health professionals to help them recover from any mental related issues.
 
-## Getting Started
+The app allows two form of registration ,user and therapist. Students will choose the user section, professionals choose therapist section and authentication is done accordingly. Users can chat with any therapist to find solution to their problem. 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Therapists are often volunteers that have people, especially students psychological. We believe that with this simple application we can solve the psychological issues faced by many students, and this can scale to accomodate anyone.
